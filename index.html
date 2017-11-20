@@ -64,16 +64,16 @@
     <!-- BEGIN - Les tests -->
     <script>
       QUnit.test("header tests", function (assert) {
-          var tr = $('tr')[0].cells;
+          var tr = $('tr')[0].cells, ok = true;
           for (var i = 0; i < tr.length; i++) {
               column = tr[i].textContent;
-              var ok = column === "First name" || column === "Last name" || column === "Phones" || column === "Mails" || column === "Tags" || column === "Actions";
+              ok = column === "First name" || column === "Last name" || column === "Phones" || column === "Mails" || column === "Tags" || column === "Actions";
           }
           assert.ok(ok === true, "Header OK" );
       });
 
       QUnit.test("list tests", function (assert) {
-          var tr = $('tr')[0].cells, i = 0;
+          var tr = $('tr')[0].cells, i = 0, ok = true;
           var firstOK = tr[0].textContent === "First name";
           var secondOK = tr[1].textContent === "Last name";
           assert.ok(firstOK && secondOK, "Both Headers OK" );
@@ -81,22 +81,48 @@
           var iterator = Contact.Contacts.instance().iterator();
           while (iterator.hasNext()) {
               var contact = iterator.next();
-              ok = $('#cellFirstName')[i].innerHTML === contact.firstName();
-              ok = $('#cellLastName')[i].innerHTML === contact.lastName();
+              ok = $('td#cellFirstName')[i].innerHTML === contact.firstName();
+              ok = $('td#cellLastName')[i].innerHTML === contact.lastName();
+              i++;
           }
-          assert.ok(ok === true, "DATAS OK");
+          assert.ok(ok === true, "List OK");
       });
 
       QUnit.test("first entry tests", function (assert) {
-          assert.ok(false);
+          var ok = true;
+          var iterator = Contact.Contacts.instance().iterator();
+          var firstContact = iterator.next();
+          var firstNameOk = $('td#cellFirstName')[0].innerHTML === firstContact.firstName();
+          var lastNameOk = $('td#cellLastName')[0].innerHTML === firstContact.lastName();
+          var phone1Ok = $('td#cellPhones')[0].innerHTML.includes(firstContact.phones()[0].number());
+          var phone2Ok = $('td#cellPhones')[0].innerHTML.includes(firstContact.phones()[1].number());
+          var mail1Ok = $('td#cellMails')[0].innerHTML.includes(firstContact.mails()[0].address());
+          var mail2Ok = $('td#cellMails')[0].innerHTML.includes(firstContact.mails()[1].address());
+          var tagsOk = $('td#cellTags')[0].innerHTML === firstContact.tags()[0];
+          ok = firstNameOk && lastNameOk && phone1Ok && phone2Ok && mail1Ok && mail2Ok && tagsOk;
+          assert.ok(ok === true, "First entry OK");
       });
 
       QUnit.test("remove contact tests", function (assert) {
-        assert.ok(false);
+        var ok = true;
+          var iterator = Contact.Contacts.instance().iterator();
+          var contact = iterator.next();
+          var apiBeforeDel = contact.firstName();
+          var htmlBeforeDel = $('td#cellFirstName')[0].innerHTML;
+          $('a#button_' + contact.id()).click();
+
+          var iteratorAfterDel = Contact.Contacts.instance().iterator();
+          var contactAfterDel = iteratorAfterDel.next();
+          var apiAfterDel = contactAfterDel.firstName();
+          var htmlAfterDel = $('td#cellFirstName')[0].innerHTML;
+          ok = apiBeforeDel !== apiAfterDel && htmlBeforeDel !== htmlAfterDel;
+
+          assert.ok(ok === true, "Remove contact OK");
       });
 
       QUnit.test("sort contact tests", function (assert) {
-        assert.ok(false);
+
+          assert.ok(false);
       });
     </script>
     <!-- END - Les tests -->
