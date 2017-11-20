@@ -121,8 +121,20 @@
       });
 
       QUnit.test("sort contact tests", function (assert) {
+          var arr = [], ok = true;
+          var iterator = Contact.Contacts.instance().iterator();
+          while (iterator.hasNext()) {
+              var contact = iterator.next();
+              arr.push(contact.lastName());
+          }
 
-          assert.ok(false);
+          var sortedArr = arr.sort();
+          $('a#button_sort').click();
+          var lastName0 = $('td#cellLastName')[0].innerHTML === sortedArr[0];
+          var lastName1 = $('td#cellLastName')[1].innerHTML === sortedArr[1];
+          var lastName2 = $('td#cellLastName')[2].innerHTML === sortedArr[2];
+          ok = lastName0 && lastName1 && lastName2;
+          assert.ok(ok === true, "Sort contact OK");
       });
     </script>
     <!-- END - Les tests -->
