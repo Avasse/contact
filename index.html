@@ -73,7 +73,18 @@
       });
 
       QUnit.test("list tests", function (assert) {
-          assert.ok(false);
+          var tr = $('tr')[0].cells, i = 0;
+          var firstOK = tr[0].textContent === "First name";
+          var secondOK = tr[1].textContent === "Last name";
+          assert.ok(firstOK && secondOK, "Both Headers OK" );
+
+          var iterator = Contact.Contacts.instance().iterator();
+          while (iterator.hasNext()) {
+              var contact = iterator.next();
+              ok = $('#cellFirstName')[i].innerHTML === contact.firstName();
+              ok = $('#cellLastName')[i].innerHTML === contact.lastName();
+          }
+          assert.ok(ok === true, "DATAS OK");
       });
 
       QUnit.test("first entry tests", function (assert) {
